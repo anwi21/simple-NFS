@@ -1,0 +1,103 @@
+Anwi Gundavarapu
+CPSC 3500: Computing Systems
+Simple Network File System Implementation based on assignment instructions
+------------------------------------------------------------------------------------------------------------------------
+This is a simple NFS that takes one client at a time.
+This program can connect a client to a <servername:Port#>
+where a server with the same port# is waiting for the clients request.
+
+For this assignment: servername = cs1.seattleu.edu
+                     port # = 10155
+
+The strengths of this program are:
+ - Server side:
+    (server.cpp)
+    - a socket is successfully opened to connect to a client request using a port#
+    - the socket effectively uses listen(), bind() and accept() and recv() to receive the clients request,
+    - after processing it, the response is returned using send().
+    - a TCP is used to send data:
+        - send() is looped so the entire output is fully sent to the client successfully.
+        - effectively understands TCP's byte-stream nature
+
+ - Client side:
+    (shell.cpp)
+    - a client can properly send its request and recv the output from the server.
+    - the shell converts the message to be properly formatted for the server to receive and read.
+    - the message/output returned is then also formatted to be displayed to the client in a user friendly manner.
+
+ -File system side:
+    (FileSys.cpp)
+    - Effectively defines commands/requests that a client can make.
+    - Commands are processed uniquely for each request and then data is read/stored/written to disk storage accordingly
+    - each request identifies if a request is connected to a directory or file.
+    - uses the disk block/inode block appropriately for each unique request.
+    - then stores the output message/error code so server side can effectively communicate that with the client
+
+The weaknesses of this program are:
+    - the server can only take 1 client at a time.
+    - the client can only request one action at a time
+    - when writing to a file (appending) the client can only send one string at a time.
+
+Test cases -------------------------------------------------------------------------------------------------------------
+Test case #1: mkdir abc
+Results:
+ success
+
+Test case #2: ls
+Results:
+ abc/
+
+Test case #3: rm abc
+Results:
+ 501 File is a directory
+
+Test case #4: cd abc
+Results:
+ Success
+
+Test case #5: create filename
+Results:
+ Success
+
+Test case #6: home
+Results:
+ Success
+
+Test case #7: rmdir abc
+Results:
+ 507 Directory is not empty
+
+Test case #8:cd abc
+Results:
+ Success
+
+Test case #9: stat filename
+Results:
+ Inode block: 6
+ Bytes in file: 0
+ Number of blocks: 0
+ First block: 0
+
+Test case #10:append filename tree
+Results:
+ Success
+
+Test case #11: head filename 2
+Results:
+ tr
+
+Test case #12: cat filename
+Results:
+ tree
+
+
+
+
+
+
+
+
+
+
+
+
